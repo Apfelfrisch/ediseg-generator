@@ -1,0 +1,36 @@
+namespace Apfelfrisch\Segment;
+
+use Apfelfrisch\Edifact\Elements;
+use Apfelfrisch\Edifact\Segments\AbstractSegment;
+
+class Ajt extends AbstractSegment
+{
+	private static Elements|null $blueprint = null;
+
+
+	public static function blueprint(): Elements
+	{
+		if (self::$blueprint === null) {
+			self::$blueprint = (new Elements)
+				->addValue('4465', '4465', 'M|an|..3')
+				->addValue('4467', '4463', 'M|an|..3')
+				;
+		}
+		return self::$blueprint;
+	}
+
+
+	public static function fromAttributes(string|null $qualifier = null): self
+	{
+		return new self((new Elements)
+			->addValue('4465', '4465', 'code')
+			->addValue('4467', '4463', $qualifier)
+		);
+	}
+
+
+	public function qualifier(): string|null
+	{
+		return $this->elements->getValue('4467', '4463');
+	}
+}
