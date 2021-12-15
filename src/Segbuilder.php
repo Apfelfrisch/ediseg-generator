@@ -9,8 +9,8 @@ use Nette\PhpGenerator\PhpNamespace;
 
 final class Segbuilder
 {
-    private const NAMESPACE_ELEMENTS = 'Apfelfrisch\Edifact\Elements';
-    private const NAMESPACE_ABSTRACT_SEGMENT = 'Apfelfrisch\Edifact\Segments\AbstractSegment';
+    private const NAMESPACE_ELEMENTS = 'Apfelfrisch\Edifact\Segment\Elements';
+    private const NAMESPACE_ABSTRACT_SEGMENT = 'Apfelfrisch\Edifact\Segment\AbstractSegment';
     private const PROBERTY_BLUEPRINT = 'blueprint';
     private const METHOD_BLUEPRINT = self::PROBERTY_BLUEPRINT;
     private const TYPE_ONIN_NULL = '|null';
