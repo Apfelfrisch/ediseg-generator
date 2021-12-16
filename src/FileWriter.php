@@ -18,17 +18,17 @@ final class FileWriter
         $this->printer ??= new PsrPrinter;
     }
 
-    public function setSegmentNamespace(string $namespace)
+    public function setSegmentNamespace(string $namespace): void
     {
         $this->namespace = $namespace;
     }
 
-    public function addClassResolver(XmlSegmentResolver $classResolver)
+    public function addClassResolver(XmlSegmentResolver $classResolver): void
     {
         $this->classResolver[] = $classResolver;
     }
 
-    public function writeFiles(string $path = __DIR__)
+    public function writeFiles(string $path = __DIR__): void
     {
         if (substr($path, -1) === DIRECTORY_SEPARATOR) {
             $path = substr($path, 0, -1);

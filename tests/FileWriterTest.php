@@ -28,7 +28,7 @@ final class FileWriterTest extends TestCase
         rmdir($this->path);
     }
 
-    private function cleanPath()
+    private function cleanPath(): void
     {
         foreach (glob($this->path . '*.php') as $segmentClassFile) {
             unlink($segmentClassFile);

@@ -20,6 +20,7 @@ final class Segbuilder
     private ClassType $class;
     private array $elements = [];
     private array $getter = [];
+    private array $componentKeys = [];
 
     public function __construct(string $namespace, string $segname)
     {
@@ -35,9 +36,9 @@ final class Segbuilder
             ->setType(self::NAMESPACE_ELEMENTS.self::TYPE_ONIN_NULL);
     }
 
-    public function addElement(string $getter, string $elementKey, string $componentKey, string $rule)
+    public function addElement(string $getter, string $elementKey, string $componentKey, string $rule): void
     {
-        $this->elements[] = [$this->normalize($getter), $elementKey, $componentKey, $rule];
+        $this->elements[] = [$this->prepareGetter($getter), $elementKey, $this->prepareComponentKey($componentKey), $rule];
     }
 
     public function build(): PhpNamespace
@@ -49,7 +50,7 @@ final class Segbuilder
         return $this->namespace;
     }
 
-    private function buildBlueprintMethod()
+    private function buildBlueprintMethod(): void
     {
         $string = array_reduce($this->elements, static fn(string $result, array $element): string
             => $result . "\t\t->addValue('" . implode("', '", array_slice($element, 1)) . "')\n"
@@ -67,7 +68,7 @@ final class Segbuilder
             ->setStatic();
     }
 
-    private function buildStaticConstructorMethods()
+    private function buildStaticConstructorMethods(): void
     {
         $method = $this->class->addMethod('fromAttributes')->setReturnType('self');
 
@@ -87,7 +88,7 @@ final class Segbuilder
         $method->setBody($body . ');')->setStatic();
     }
 
-    private function buildGetterMethods()
+    private function buildGetterMethods(): void
     {
         foreach (array_slice($this->elements, 1) as $element) {
             [$getter, $elementKey, $componentKey] = $element;
@@ -99,16 +100,34 @@ final class Segbuilder
         }
     }
 
-    private function normalize(string $string): string
+    private function prepareGetter(string $getter): string
     {
-        $this->getter[] = $string;
+        $this->getter[] = $getter;
 
-        $count = array_count_values($this->getter)[$string];
+        $count = array_count_values($this->getter)[$getter];
 
         if ($count > 1) {
-            return preg_replace('/[^a-zA-Z0-9]/', '', $string . (string)$count);
+            return $this->normalize($getter . (string)$count);
         }
 
+        return $this->normalize($getter);
+    }
+
+    private function prepareComponentKey(string $componentKey): string
+    {
+        $this->componentKeys[] = $componentKey;
+
+        $count = array_count_values($this->componentKeys)[$componentKey];
+
+        if ($count > 1) {
+            return $this->normalize($componentKey) . ':' . (string)$count;
+        }
+
+        return $this->normalize($componentKey);
+    }
+
+    private function normalize(string $string): string
+    {
         return preg_replace('/[^a-zA-Z0-9]/', '', $string);
     }
 }
