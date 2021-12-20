@@ -11,11 +11,12 @@ final class FileWriter
 {
     private string $namespace = '';
     private array $classResolver = [];
+    private Printer $printer;
 
     public function __construct(
-        private Printer|null $printer = null
+        Printer|null $printer = null
     ) {
-        $this->printer ??= new PsrPrinter;
+        $this->printer = $printer ?? new PsrPrinter;
     }
 
     public function setSegmentNamespace(string $namespace): void
