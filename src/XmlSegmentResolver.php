@@ -67,7 +67,7 @@ final class XmlSegmentResolver
         $segbuilder->addElement(
             $component->attributes()->name,
             $elementKey,
-            $component->attributes(),
+            (string) $component->attributes(),
             $rule
         );
 
